@@ -1,0 +1,6 @@
+*~
+.svn
+config_db.php
+admin/*
+build/*
+terminal/config/db.php

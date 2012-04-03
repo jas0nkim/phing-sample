@@ -1,0 +1,6 @@
+sync.source.projectdir=/PATH/TO/LOCAL/PROJECT/DIR/WITH/TRAILING/SLASH/
+sync.destination.projectdir=/PATH/TO/REMOTE/PROJECT/DIR/WITHOUT/TRAILING/SLASH
+sync.remote.host=HOST_NAME
+sync.remote.user=USER_NAME
+sync.destination.backupdir=/PATH/TO/REMOTE/BACKUP/DIR/WITHOUT/TRAILING/SLASH
+sync.exclude.file=/PATH/TO/sync.exclude/FILE

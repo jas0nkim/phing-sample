@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MiiscanXpress" default="build">
+    
+    <!-- Public targets -->
+    <target name="build" depends="sync" />
+    
+     <target name="sync-orm:list" description="List files: orm only">
+        <phingcall target="-sync-app-orm">
+            <property name="listonly" value="true" />
+        </phingcall>
+    </target>
+
+    <target name="sync-frontend:list" description="List files: frontend/terminal only">
+        <phingcall target="-sync-app-frontend">
+            <property name="listonly" value="true" />
+        </phingcall>
+    </target>
+
+    <target name="sync-admin:list" description="List files: admin only">
+        <property name="listonly" value="true" />
+        <phingcall target="-sync-app-admin-application" />
+        <phingcall target="-sync-app-admin-library" />
+        <phingcall target="-sync-app-admin-public" />
+    </target>
+
+    <target name="sync:list" description="List files">
+        <phingcall target="-sync-apps">
+            <property name="listonly" value="true" />
+        </phingcall>
+    </target>
+
+    <target name="sync-orm" description="Copy files: orm only">
+        <phingcall target="-sync-app-orm">
+            <property name="listonly" value="false" />
+        </phingcall>
+    </target>
+
+    <target name="sync-frontend" description="Copy files: frontend/terminal only">
+        <phingcall target="-sync-app-frontend">
+            <property name="listonly" value="false" />
+        </phingcall>
+    </target>
+
+    <target name="sync-admin" description="Copy files: admin only">
+        <property name="listonly" value="false" />
+        <phingcall target="-sync-app-admin-application" />
+        <phingcall target="-sync-app-admin-library" />
+        <phingcall target="-sync-app-admin-public" />
+    </target>
+    
+    <target name="sync" description="Copy files">
+        <phingcall target="-sync-apps">
+            <property name="listonly" value="false" />
+        </phingcall>
+    </target>
+
+    <!-- Private targets -->
+    <target name="-sync-apps">
+        <phingcall target="-sync-app-orm" />
+        <phingcall target="-sync-app-frontend" />
+        <phingcall target="-sync-app-admin-application" />
+        <phingcall target="-sync-app-admin-library" />
+        <phingcall target="-sync-app-admin-public" />
+    </target>
+
+    <target name="-sync-app-orm">
+        <!-- sync orm -->
+        <phingcall target="-sync-execute-task">
+            <property name="buildpropertiesfilename" value="build.properties" />
+            <property name="syncpropertiesfilename" value="sync.orm.properties" />
+        </phingcall>
+    </target>
+
+    <target name="-sync-app-frontend">
+        <!-- sync frontend and terminal -->
+        <phingcall target="-sync-execute-task">
+            <property name="buildpropertiesfilename" value="build.properties" />
+            <property name="syncpropertiesfilename" value="sync.frontend.properties" />
+        </phingcall> 
+    </target>
+
+    <target name="-sync-app-admin-application">
+        <!-- sync admin/application -->        
+        <phingcall target="-sync-execute-task">
+            <property name="buildpropertiesfilename" value="build.properties" />
+            <property name="syncpropertiesfilename" value="sync.admin.application.properties" />
+        </phingcall>        
+    </target>
+
+    <target name="-sync-app-admin-library">
+        <!-- sync admin/library -->        
+        <phingcall target="-sync-execute-task">
+            <property name="buildpropertiesfilename" value="build.properties" />
+            <property name="syncpropertiesfilename" value="sync.admin.library.properties" />
+        </phingcall>        
+    </target>
+
+    <target name="-sync-app-admin-public">
+         <!-- sync admin/public -->        
+        <phingcall target="-sync-execute-task">
+            <property name="buildpropertiesfilename" value="build.properties" />
+            <property name="syncpropertiesfilename" value="sync.admin.public.properties" />
+        </phingcall>        
+    </target>
+
+    <target name="-init" description="Load main settings">
+        <tstamp />
+        <property file="${buildpropertiesfilename}" />
+    </target>
+
+    <target name="-sync-execute-task" depends="-init">
+        <property file="${syncpropertiesfilename}" />
+        <if>
+            <not>
+                <isset property="sync.verbose" />
+            </not>
+            <then>
+                <property name="sync.verbose" value="true" override="true" />
+                <echo message="The value of sync.verbose has been set to true" />
+            </then>
+        </if>
+        <property name="sync.remote.auth" value="${sync.remote.user}@${sync.remote.host}" />
+        <taskdef name="sync" classname="phing.tasks.ext.FileSyncTask" />
+        <sync
+            sourcedir="${sync.source.projectdir}"
+            destinationdir="${sync.remote.auth}:${sync.destination.projectdir}"
+            backupdir="${sync.remote.auth}:${sync.destination.backupdir}"
+            excludefile="${sync.exclude.file}"
+            listonly="${listonly}"
+            verbose="${sync.verbose}" />
+    </target>
+</project>
