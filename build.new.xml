@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="MiiscanXpress" default="build">
     
-    <!-- Public targets -->
+    <!-- 
+    //////////////// Public targets //////////////// 
+    -->
     <target name="build" depends="sync" />
+
+    <target name="sync-wallet:list" description="List files: Wallet only">
+        <phingcall target="-sync-app-wallet">
+            <property name="listonly" value="true" />
+        </phingcall>
+    </target>
     
-     <target name="sync-orm:list" description="List files: orm only">
+    <target name="sync-orm:list" description="List files: orm only">
         <phingcall target="-sync-app-orm">
             <property name="listonly" value="true" />
         </phingcall>
@@ -26,6 +34,12 @@
     <target name="sync:list" description="List files">
         <phingcall target="-sync-apps">
             <property name="listonly" value="true" />
+        </phingcall>
+    </target>
+   
+    <target name="sync-wallet" description="Copy files: Wallet only">
+        <phingcall target="-sync-app-wallet">
+            <property name="listonly" value="false" />
         </phingcall>
     </target>
 
@@ -54,8 +68,11 @@
         </phingcall>
     </target>
 
-    <!-- Private targets -->
+    <!-- 
+    //////////////// Private targets //////////////// 
+    -->
     <target name="-sync-apps">
+        <phingcall target="-sync-app-wallet" />
         <phingcall target="-sync-app-orm" />
         <phingcall target="-sync-app-frontend" />
         <phingcall target="-sync-app-admin-application" />
@@ -63,40 +80,48 @@
         <phingcall target="-sync-app-admin-public" />
     </target>
 
+    <!-- sync wallet -->
+    <target name="-sync-app-wallet">
+        <phingcall target="-sync-execute-task">
+            <property name="buildpropertiesfilename" value="build.properties" />
+            <property name="syncpropertiesfilename" value="sync.wallet.properties" />
+        </phingcall>
+    </target>
+
+   <!-- sync orm -->
     <target name="-sync-app-orm">
-        <!-- sync orm -->
         <phingcall target="-sync-execute-task">
             <property name="buildpropertiesfilename" value="build.properties" />
             <property name="syncpropertiesfilename" value="sync.orm.properties" />
         </phingcall>
     </target>
 
+    <!-- sync frontend and terminal -->
     <target name="-sync-app-frontend">
-        <!-- sync frontend and terminal -->
         <phingcall target="-sync-execute-task">
             <property name="buildpropertiesfilename" value="build.properties" />
             <property name="syncpropertiesfilename" value="sync.frontend.properties" />
         </phingcall> 
     </target>
 
+    <!-- sync admin/application -->        
     <target name="-sync-app-admin-application">
-        <!-- sync admin/application -->        
         <phingcall target="-sync-execute-task">
             <property name="buildpropertiesfilename" value="build.properties" />
             <property name="syncpropertiesfilename" value="sync.admin.application.properties" />
         </phingcall>        
     </target>
 
+    <!-- sync admin/library -->        
     <target name="-sync-app-admin-library">
-        <!-- sync admin/library -->        
         <phingcall target="-sync-execute-task">
             <property name="buildpropertiesfilename" value="build.properties" />
             <property name="syncpropertiesfilename" value="sync.admin.library.properties" />
         </phingcall>        
     </target>
 
+    <!-- sync admin/public -->        
     <target name="-sync-app-admin-public">
-         <!-- sync admin/public -->        
         <phingcall target="-sync-execute-task">
             <property name="buildpropertiesfilename" value="build.properties" />
             <property name="syncpropertiesfilename" value="sync.admin.public.properties" />
