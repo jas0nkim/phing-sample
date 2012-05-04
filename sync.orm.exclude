@@ -6,6 +6,6 @@ buildtime-conf.xml
 buildtime-conf-sample.xml
 runtime-config.xml
 runtime-config-sample.xml
-proopel-gen
+propel-gen
 schema.xml
 miiscanx-conf.php

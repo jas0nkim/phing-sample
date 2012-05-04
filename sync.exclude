@@ -1,7 +1,0 @@
-*~
-.svn
-config_db.php
-build/*
-products
-products/*
-terminal/config/db.php
